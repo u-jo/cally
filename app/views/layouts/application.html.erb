@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="CallyApp">
+<html>
 <head>
   <title><%= yield(:title) %></title>
   <!-- Latest compiled and minified CSS -->
@@ -7,6 +7,8 @@
 
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+	<link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.0/fullcalendar.min.css' />	
+	<link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.0/fullcalendar.print.css' media='print'/>	
 
 	<link href='http://fonts.googleapis.com/css?family=Montserrat:700,400' rel='stylesheet' type='text/css'>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
@@ -19,8 +21,12 @@
 	<%= render 'nav/nav' %>
 	<%= yield %>
 
+
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<!-- moment.js -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.3/moment.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.0/fullcalendar.min.js"></script>
 
 </body>
 </html>

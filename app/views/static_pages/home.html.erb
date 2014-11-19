@@ -1,9 +1,54 @@
 <% title "Cally" %>
-<div ng-controller="HomeController">
-	<% if user_signed_in? %>
+<div>
+	<% if !user_signed_in? %>
 		<!-- to render home page -->
 	<% else %>
-		<!-- to render other -->
+		<div ng-controller="CalendarCtrl">
+			<div class="container calendar-container">
+				<div class="row">
+					<div class="col-md-8">
+						<div class="calendar" id='calendar'></div>
+					</div>
+					<div class="col-md-4">
+						<div class="row task-list-header">
+							<div class="col-md-8">
+								<span class="task-list-label">
+									<%= current_user.name %>'s Task List
+								</span>
+							</div>
+							<div class="col-md-2 col-md-offset-2">
+								<!-- Standard button -->
+								<a ng-click="createTask()" class="link-cursor">
+								<i class="icon ion-plus"></i>
+							</a>
+							</div>
+						</div>
+
+						<div class="row task-item" ng-repeat="task in tasks">
+							<div class="col-md-2">
+								<a class="link-cursor">
+									<i class="icon ion-checkmark"></i>
+								</a>
+							</div>
+							<div class="col-md-8">
+								{{task.name}} - {{ task.date | date : 'dd MMMM yyyy'}}
+							</div>
+
+							<div class="col-md-2">
+								<!-- Standard button -->
+								<a ng-click="inspectTask(task)" class="link-cursor">
+									<i class="icon ion-eye"></i>
+								</a>
+							
+							</div>
+
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+
 	<% end %> 
 </div>
 

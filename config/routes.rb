@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'calendar/new'
+
   # app/config/routes.rb
   devise_for :users, :controllers => {:registrations => "registrations"}
   root to: 'static_pages#home'

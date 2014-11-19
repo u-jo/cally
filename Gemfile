@@ -35,7 +35,6 @@ group :development do
   gem 'guard-livereload', require: false
 end
 
-gem 'bower-rails'
 gem 'angular-rails-templates'
 
 # Use ActiveModel has_secure_password

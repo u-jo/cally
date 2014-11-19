@@ -3,7 +3,7 @@ app.controller('TaskModalCtrl',
   	$scope.closeModal= function() {
 		$modalInstance.dismiss('cancel');
   	};
-
+  	$scope.edit = edit;
   	$scope.taskPrompt = edit === true ? 'Edit task' : 'Add Task';
 
   	$scope.minDate = new Date();
@@ -19,10 +19,19 @@ app.controller('TaskModalCtrl',
   	$scope.format = $scope.formats[0];
 
   	$scope.task = task;
+  	$scope.reevaluateRemainder = function() {
 
+  		if ($scope.edit) {
+  			$scope.task.remainingTime = $scope.task.time - $scope.task.timeCompleted;
+  		}
+  	};
+	if ($scope.edit) {
+  		$scope.reevaluateRemainder();
+  	}
   	$scope.createTask = function() {
   		if (!edit) {
   			tasks.push($scope.task);
+  			$scope.task.timeCompleted = 0;
 	  		var task = { id: $scope.task.name, title: $scope.task.name, start: $scope.task.date, end: $scope.task.date};
 			$('#calendar').fullCalendar('renderEvent', task, true);
   		} else {
@@ -35,5 +44,7 @@ app.controller('TaskModalCtrl',
 
   		$modalInstance.dismiss('cancel');
   	};
+  	$scope.remainingTime = '';
+  	
 
   });

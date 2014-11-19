@@ -17,6 +17,22 @@ class WorkitemsController < ApplicationController
   def destroy
   end
 
+
+  def deactivate
+    @workitem = current_user.workitems.find(params[:id])
+    @workitem.update_attribute(:active, false)
+  end 
+
+
+  def update
+    @workitem = current_user.workitems.find(params[:id])
+    @workitem.update!(workitem_params)
+    redirect_to workitem
+  end 
+
+
+
+
   def show
     if (user_signed_in?)
       workitems = current_user.workitems.order(:due_date)

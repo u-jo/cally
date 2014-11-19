@@ -1,8 +1,18 @@
 # customize session controller
 class SessionsController < Devise::SessionsController
 	include ApplicationHelper
+	def new 
+		super
+	end
   	def create
-  		puts auth_options
+  		self.resource = warden.authenticate!(auth_options)
+  		sign_in(resource_name, resource)
+  		if !session[:return_to].blank?
+  			redirect_to session[:return_to]
+  			session[:return_to] = nil
+  		else
+  			respond_with resource, :location => :root
+  		end
   		# self.resource = warden.authenticate!(auth_options)
 	   #  sign_in(resource_name, resource)
 	   #  if !session[:return_to].blank?

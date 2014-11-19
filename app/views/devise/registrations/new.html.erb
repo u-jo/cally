@@ -1,5 +1,7 @@
-<div ng-controller="SignupController" class="signup">
-	<%= form_for resource, :url => user_registration_path, :html => {:method => :post} do |f| %>
+<%= image_tag "homePicture.jpg" %>
+<div class="signup">
+	<%= form_for(resource, :as => resource_name, :url => registration_path) do |f| %>
+		<%= devise_error_messages! %>
 		<div class="container signup-field">
 			<div class="row">
 				<span class="signup-label">Sign Up Free</span>
@@ -25,4 +27,5 @@
 		</div>
 	<% end %>
 </div>
+
 

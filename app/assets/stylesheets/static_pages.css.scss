@@ -4,6 +4,7 @@
 $montserrat: "Montserrat", sans-serif;
 .signup {
 	font-family: $montserrat;
+	margin-top: 10%;
 }
 .signup-field {
 	width: 45%;
@@ -14,6 +15,7 @@ $montserrat: "Montserrat", sans-serif;
 	margin-top: auto;
 	margin-bottom: auto;
 	display: block;
+	background-color: white;
 }
 
 .signup-field input {

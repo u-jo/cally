@@ -1,5 +1,8 @@
+<% title "Cally - Sign Up" %>
+<%= image_tag "signup.jpg", class: "signup-image" %>
 <div class="signup">
 	<%= form_for(resource, :as => resource_name, :url => user_registration_path) do |f| %>
+		<%= devise_error_messages! %>
 		<div class="container signup-field">
 			<div class="row">
 				<span class="signup-label">Sign Up Free</span>
@@ -25,4 +28,3 @@
 		</div>
 	<% end %>
 </div>
-

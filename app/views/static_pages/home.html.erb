@@ -1,4 +1,9 @@
+<% title "Cally" %>
 <div ng-controller="HomeController">
-	Home page
+	<% if user_signed_in? %>
+		<!-- to render home page -->
+	<% else %>
+		<!-- to render other -->
+	<% end %> 
 </div>
 

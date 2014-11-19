@@ -74,12 +74,8 @@ GEM
     hitimes (1.2.2)
     http_parser.rb (0.6.0)
     i18n (0.6.11)
-<<<<<<< HEAD
-    jbuilder (2.2.5)
-=======
     ionicons-rails (1.5.2)
     jbuilder (2.2.4)
->>>>>>> 5b1629e311b2d7def4d22245c6c7fe9fad9b740f
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
     jquery-rails (3.1.2)

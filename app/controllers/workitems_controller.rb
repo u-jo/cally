@@ -1,4 +1,6 @@
 class WorkitemsController < ApplicationController
+before_action :correct_user, only: :destroy
+
   def new
   end  
 
@@ -15,22 +17,19 @@ class WorkitemsController < ApplicationController
 
 
   def destroy
+    @workitem.destroy
   end
 
 
   def deactivate
-    @workitem = current_user.workitems.find(params[:id])
     @workitem.update_attribute(:active, false)
   end 
 
 
   def update
-    @workitem = current_user.workitems.find(params[:id])
     @workitem.update!(workitem_params)
     redirect_to workitem
   end 
-
-
 
 
   def show
@@ -56,6 +55,7 @@ class WorkitemsController < ApplicationController
   	end
 
     respond_to do |format|
+
       format.json {
         render :json =>{ :totaltime => totaltime }
       }
@@ -74,6 +74,9 @@ class WorkitemsController < ApplicationController
       params.require(:workitem).permit(:content, :minutes_needed, :minutes_completed, :due_date, :active)
     end
 
-
+    def correct_user
+      @workitem = current_user.workitems.find_by(id: params[:id])
+      redirect_to root_url if @workitem.nil?
+    end
 
 end

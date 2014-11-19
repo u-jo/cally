@@ -1,5 +1,5 @@
 app.controller('TaskModalCtrl',
-  function ($scope, $modalInstance, tasks, task, edit) {
+  function ($scope, $modalInstance, tasks, task, edit, totalTimeObj, workitemService) {
   	$scope.closeModal= function() {
 		$modalInstance.dismiss('cancel');
   	};
@@ -20,9 +20,8 @@ app.controller('TaskModalCtrl',
 
   	$scope.task = task;
   	$scope.reevaluateRemainder = function() {
-
   		if ($scope.edit) {
-  			$scope.task.remainingTime = $scope.task.time - $scope.task.timeCompleted;
+  			$scope.task.remainingTime = $scope.task.time - $scope.task.completedTime;
   		}
   	};
 	if ($scope.edit) {
@@ -30,19 +29,30 @@ app.controller('TaskModalCtrl',
   	}
   	$scope.createTask = function() {
   		if (!edit) {
-  			tasks.push($scope.task);
-  			$scope.task.timeCompleted = 0;
-	  		var task = { id: $scope.task.name, title: $scope.task.name, start: $scope.task.date, end: $scope.task.date};
-			$('#calendar').fullCalendar('renderEvent', task, true);
+  			$scope.task.completedTime = 0;
+			workitemService.createWorkitem($scope.task).then(function(taskResource) {
+				tasks.push($scope.task);
+	  			$scope.task.id = taskResource;
+		  		var task = { id: taskResource.id, title: $scope.task.name, start: $scope.task.date, end: $scope.task.date};
+				$('#calendar').fullCalendar('renderEvent', task, true);
+				tasks = tasks.sort(function(a, b) {
+		  			return a.date - b.date;
+		  		});
+		  		$modalInstance.dismiss('cancel');
+		  		workitemService.getWorkEstimate().then(function(workEstimate) {
+		  			totalTimeObj.totaltime = workEstimate;
+		  		});
+			});
   		} else {
-  			var selectedTask = $('#calendar').fullCalendar( 'clientEvents', $scope.task.name)[0];
+  			var selectedTask = $('#calendar').fullCalendar( 'clientEvents', $scope.task.id)[0];
   			selectedTask.start = $scope.task.date;
   			selectedTask.end = $scope.task.date;
   			$('#calendar').fullCalendar( 'updateEvent', selectedTask);
-  		}
-  		
-
-  		$modalInstance.dismiss('cancel');
+  			tasks = tasks.sort(function(a, b) {
+	  			return a.date - b.date;
+	  		});
+	  		$modalInstance.dismiss('cancel');
+  		}	
   	};
   	$scope.remainingTime = '';
   	

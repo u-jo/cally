@@ -5,8 +5,11 @@ Rails.application.routes.draw do
   # app/config/routes.rb
   devise_for :users, :controllers => {:registrations => "registrations"}
   root to: 'static_pages#home'
+  resource :workitem
 
   get '/dashboard' => 'dashboard#new'
+
+  get '/workestimate' => 'workitems#totalwork'
 
   as :user do
     get "/login" => "devise/sessions#new"

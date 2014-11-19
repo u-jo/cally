@@ -52,7 +52,6 @@ class WorkitemsController < ApplicationController
 # else if 16 < totalworkhours < 24: sleep = 24 - totalworkhours, leisure = 0
 # else: sleep = 8, leisure = 16-totalworkhours
 
-
  private
 
     def workitem_params

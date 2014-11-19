@@ -1,0 +1,68 @@
+app.controller('CalendarCtrl',
+  function ($scope, $modal) {
+
+    // page is now ready, initialize the calendar...
+
+    $(document).ready(function() {
+		
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: ''
+			},
+			buttonText: {
+				today: 'Today'
+			},
+			defaultDate: new Date(),
+			editable: true,
+			eventLimit: true,
+			timeFormat: ''
+		});
+		
+	});
+
+	$scope.tasks = [];
+
+	$scope.createTask = function() {
+		var modalInstance = $modal.open({
+	      templateUrl: 'taskModal.html',
+	      controller: 'TaskModalCtrl',
+	      size: 'md',
+	      resolve: {
+	      	tasks: function() {
+	      		return $scope.tasks;
+	      	},
+	      	task: function() {
+	      		return {
+	      			name: '',
+	      			date: '',
+	      			time: ''
+	      		}
+	      	},
+	      	edit: function() {
+	      		return false;
+	      	}
+	      }
+	    });
+	};
+	$scope.inspectTask = function(currentTask) {
+		var modalInstance = $modal.open({
+	      templateUrl: 'taskModal.html',
+	      controller: 'TaskModalCtrl',
+	      size: 'md',
+	      resolve: {
+	      	tasks: function() {
+	      		return $scope.tasks;
+	      	},
+	      	task: function() {
+	      		return currentTask;
+	      	},
+	      	edit: function() {
+	      		return true;
+	      	}
+	      }
+	    });
+	}
+
+  });

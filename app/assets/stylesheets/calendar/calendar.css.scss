@@ -1,0 +1,38 @@
+@import 'ionicons';
+$montserrat: "Montserrat", sans-serif;
+.calendar-container {
+	width: 95%;
+	font-family: $montserrat;
+}
+
+.task-list-header {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+	margin-bottom: 10px; 
+
+}
+.task-list-label, i.ion-plus  {
+	font-size: 20px;
+}
+
+.modal {
+	font-family: $montserrat;
+	background: rgba(0,0,0, 0.6);
+}
+.modal-header {
+	border-bottom: none;
+	font-size: 20px;
+}
+
+
+a.link-cursor:hover {
+	cursor: pointer;
+}
+
+.modal-container {
+	width: 100%;
+}
+
+.task-item {
+	font-size: 17px;
+}

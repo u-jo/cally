@@ -29,10 +29,14 @@ gem 'spring',        group: :development
 gem 'jquery-turbolinks'
 
 gem 'devise'
+gem 'ionicons-rails'
 
 group :development do
   gem 'guard-livereload', require: false
 end
+
+gem 'bower-rails'
+gem 'angular-rails-templates'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

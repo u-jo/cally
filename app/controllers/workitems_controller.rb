@@ -4,12 +4,28 @@ class WorkitemsController < ApplicationController
 
   def create
     @workitem = current_user.workitems.build(workitem_params)
-    return @workitem.to_json
-
+    if (@workitem.save) 
+      respond_to do |format| 
+        format.json {
+          render :json => @workitem
+        }
+      end
+    end
   end
 
 
   def destroy
+  end
+
+  def show
+    if (user_signed_in?)
+      workitems = current_user.workitems.order(:due_date)
+      respond_to do |format| 
+        format.json {
+          render :json => current_user.workitems
+        }
+      end
+    end
   end
 
 
@@ -18,10 +34,16 @@ class WorkitemsController < ApplicationController
   	totaltime = 0
   	current_user.workitems.each do |item|
   		if item.active == true
+        puts totaltime
   			totaltime += (item.minutes_needed-item.minutes_completed)/(item.due_date.to_date-Date.today).to_i
   		end
   	end
-  	return totaltime
+
+    respond_to do |format|
+      format.json {
+        render :json =>{ :totaltime => totaltime }
+      }
+    end
   end
 
 # Calculating daily work, sleep and leisure for progress bar - 
@@ -33,9 +55,8 @@ class WorkitemsController < ApplicationController
  private
 
     def workitem_params
-      params.require(:workitem).permit(:content)
+      params.require(:workitem).permit(:content, :minutes_needed, :minutes_completed, :due_date, :active)
     end
-end
 
 
 

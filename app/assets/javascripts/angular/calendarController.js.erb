@@ -1,5 +1,5 @@
 app.controller('CalendarCtrl',
-  function ($scope, $modal) {
+  function ($scope, $modal, workitemService) {
 
     // page is now ready, initialize the calendar...
 
@@ -19,10 +19,37 @@ app.controller('CalendarCtrl',
 			eventLimit: true,
 			timeFormat: ''
 		});
+
+		workitemService.getWorkItems().then(function(workitems) {
+			workitemService.getWorkEstimate().then(function(workEstimate) {
+				console.log(workEstimate);
+			});
+			workitems = workitems.sort(function(a, b) {
+				return new Date(a.due_date) - new Date(b.due_date);
+			});
+			workitems.forEach(function(workitem) {
+
+				var task = {
+					name: workitem.content,
+					time: workitem.minutes_needed/ 60,
+					completedTime: workitem.minutes_completed / 60,
+					date: new Date(workitem.due_date),
+					id: workitem.id
+				};
+				var calTask = { id: task.id, title: task.name, start: task.date, end: task.date};
+				$('#calendar').fullCalendar('renderEvent', calTask, true);
+
+				$scope.tasks.push(task);
+			});
+		});
 		
 	});
 
 	$scope.tasks = [];
+
+	$scope.totalTimeObj = {
+		totaltime: 0
+	};
 
 	$scope.createTask = function() {
 		var modalInstance = $modal.open({
@@ -42,6 +69,12 @@ app.controller('CalendarCtrl',
 	      	},
 	      	edit: function() {
 	      		return false;
+	      	},
+	      	workitemService: function() {
+	      		return workitemService;
+	      	},
+	      	totalTimeObj: function() {
+	      		return $scope.totalTimeObj;
 	      	}
 	      }
 	    });
@@ -60,6 +93,9 @@ app.controller('CalendarCtrl',
 	      	},
 	      	edit: function() {
 	      		return true;
+	      	},
+	      	workitemService: function() {
+	      		return workitemService;
 	      	}
 	      }
 	    });

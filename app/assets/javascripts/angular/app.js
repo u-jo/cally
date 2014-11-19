@@ -1,7 +1,8 @@
 var app = angular
   .module('CallyApp', [
     'ui.bootstrap',
-    'templates'
+    'templates',
+    'ngResource'
   ]).config(function (datepickerConfig, datepickerPopupConfig) {
       datepickerConfig.showWeeks = false;
       datepickerPopupConfig.showButtonBar = false;

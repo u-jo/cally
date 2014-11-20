@@ -1,6 +1,8 @@
 //= require ./angular
 //= require ./angular-resource
 //= require ./angular-ui-bootstrap
+//= require ./highcharts.js
+//= require ./exporting.js
 //= require ./app.js
 //= require ./calendarController.js
 //= require ./workitemService.js

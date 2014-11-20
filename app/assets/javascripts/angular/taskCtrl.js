@@ -1,5 +1,5 @@
 app.controller('TaskModalCtrl',
-  function ($scope, $modalInstance, tasks, task, edit, totalTimeObj, workitemService) {
+  function ($scope, $modalInstance, tasks, task, edit, totalTimeObj, workitemService, makeBar) {
   	$scope.closeModal= function() {
 		$modalInstance.dismiss('cancel');
   	};
@@ -40,8 +40,11 @@ app.controller('TaskModalCtrl',
 		  		});
 		  		$modalInstance.dismiss('cancel');
 		  		workitemService.getWorkEstimate().then(function(workEstimate) {
-		  			totalTimeObj.totaltime = workEstimate;
+		  			calculateOtherTimes(workEstimate);
+		  			makeBar();
 		  		});
+
+
 			});
   		} else {
   			var selectedTask = $('#calendar').fullCalendar( 'clientEvents', $scope.task.id)[0];
@@ -51,9 +54,31 @@ app.controller('TaskModalCtrl',
   			tasks = tasks.sort(function(a, b) {
 	  			return a.date - b.date;
 	  		});
+	  		workitemService.getWorkEstimate().then(function(workEstimate) {
+	  			calculateOtherTimes(workEstimate);
+	  			makeBar();
+	  		});
 	  		$modalInstance.dismiss('cancel');
   		}	
   	};
+
+  	function calculateOtherTimes(workEstimate) {
+  		totalTimeObj.totaltime = workEstimate.toFixed(2);
+		var otherTime = 24 - workEstimate;
+		var leisuretime = 0;
+		var sleeptime = 7;
+
+		if (otherTime < 0) {
+			sleeptime = 0;
+			leisuretime = 0;
+		} else {
+			if (otherTime > 7) {
+				leisuretime = otherTime - 7;
+			}
+		}
+		totalTimeObj.sleeptime = sleeptime.toFixed(2);
+		totalTimeObj.leisuretime = leisuretime.toFixed(2);
+  	}
   	$scope.remainingTime = '';
   	
 

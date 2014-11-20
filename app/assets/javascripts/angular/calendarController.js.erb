@@ -22,7 +22,23 @@ app.controller('CalendarCtrl',
 
 		workitemService.getWorkItems().then(function(workitems) {
 			workitemService.getWorkEstimate().then(function(workEstimate) {
-				console.log(workEstimate);
+				$scope.totalTimeObj.totaltime = workEstimate.toFixed(2);
+				var otherTime = 24 - workEstimate;
+				var leisuretime = 0;
+				var sleeptime = 7;
+
+				if (otherTime < 0) {
+					sleeptime = 0;
+					leisuretime = 0;
+				} else {
+					if (otherTime > 7) {
+						leisuretime = otherTime - 7;
+					}
+				}
+
+				$scope.totalTimeObj.sleeptime = sleeptime.toFixed(2);
+				$scope.totalTimeObj.leisuretime = leisuretime.toFixed(2);
+				$scope.makeBar();
 			});
 			workitems = workitems.sort(function(a, b) {
 				return new Date(a.due_date) - new Date(b.due_date);
@@ -41,15 +57,67 @@ app.controller('CalendarCtrl',
 
 				$scope.tasks.push(task);
 			});
+
 		});
 		
 	});
 
+	
+
 	$scope.tasks = [];
 
 	$scope.totalTimeObj = {
-		totaltime: 0
+		totaltime: 0,
+		sleeptime: 7,
+		leisuretime: 0
 	};
+
+	$scope.makeBar = function() {
+		$(function () {
+	    	$('#bar-container').highcharts({
+		        chart: {
+		            type: 'bar'
+		        },
+		        title: {
+		            text: 'Life Chart'
+		        },
+		        xAxis: {
+		            categories: ['']
+		        },
+		        yAxis: {
+		            min: 0,
+		            title: {
+		                text: 'Time / hr'
+		            },
+		            max: 24
+		        },
+		        legend: {
+		            reversed: true
+		        },
+		        plotOptions: {
+		            series: {
+		                stacking: 'normal'
+		            }
+		        },
+		        series: [{
+		            name: 'Work',
+		            data: [parseFloat($scope.totalTimeObj.totaltime)]
+		        }, {
+		            name: 'Leisure',
+		            data: [parseFloat($scope.totalTimeObj.leisuretime)]
+		        }, {
+		            name: 'Sleep',
+		            data: [parseFloat($scope.totalTimeObj.sleeptime)]
+		        }],
+		        exporting: {
+				    enabled: false
+				}
+		    });
+		});
+	};
+
+	$scope.$watch('totalTimeObj.totaltime', function() {
+	});
 
 	$scope.createTask = function() {
 		var modalInstance = $modal.open({
@@ -75,6 +143,9 @@ app.controller('CalendarCtrl',
 	      	},
 	      	totalTimeObj: function() {
 	      		return $scope.totalTimeObj;
+	      	},
+	      	makeBar: function() {
+	      		return $scope.makeBar;
 	      	}
 	      }
 	    });
@@ -96,6 +167,12 @@ app.controller('CalendarCtrl',
 	      	},
 	      	workitemService: function() {
 	      		return workitemService;
+	      	},
+	      	totalTimeObj: function() {
+	      		return $scope.totalTimeObj;
+	      	},
+	      	makeBar: function() {
+	      		return $scope.makeBar;
 	      	}
 	      }
 	    });

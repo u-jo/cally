@@ -1,4 +1,6 @@
 class WorkitemsController < ApplicationController
+before_action :correct_user, only: :destroy
+
   def new
   end  
 
@@ -15,7 +17,20 @@ class WorkitemsController < ApplicationController
 
 
   def destroy
+    @workitem.destroy
   end
+
+
+  def deactivate
+    @workitem.update_attribute(:active, false)
+  end 
+
+
+  def update
+    @workitem.update!(workitem_params)
+    redirect_to workitem
+  end 
+
 
   def show
     if (user_signed_in?)
@@ -40,6 +55,7 @@ class WorkitemsController < ApplicationController
   	end
 
     respond_to do |format|
+
       format.json {
         render :json =>{ :totaltime => totaltime }
       }
@@ -52,13 +68,15 @@ class WorkitemsController < ApplicationController
 # else if 16 < totalworkhours < 24: sleep = 24 - totalworkhours, leisure = 0
 # else: sleep = 8, leisure = 16-totalworkhours
 
-
  private
 
     def workitem_params
       params.require(:workitem).permit(:content, :minutes_needed, :minutes_completed, :due_date, :active)
     end
 
-
+    def correct_user
+      @workitem = current_user.workitems.find_by(id: params[:id])
+      redirect_to root_url if @workitem.nil?
+    end
 
 end

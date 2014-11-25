@@ -22,22 +22,7 @@ app.controller('CalendarCtrl',
 
 		workitemService.getWorkItems().then(function(workitems) {
 			workitemService.getWorkEstimate().then(function(workEstimate) {
-				$scope.totalTimeObj.totaltime = workEstimate.toFixed(2);
-				var otherTime = 24 - workEstimate;
-				var leisuretime = 0;
-				var sleeptime = 7;
-
-				if (otherTime < 0) {
-					sleeptime = 0;
-					leisuretime = 0;
-				} else {
-					if (otherTime > 7) {
-						leisuretime = otherTime - 7;
-					}
-				}
-
-				$scope.totalTimeObj.sleeptime = sleeptime.toFixed(2);
-				$scope.totalTimeObj.leisuretime = leisuretime.toFixed(2);
+				$scope.reevaluateTimeObj(workEstimate, $scope.totalTimeObj);
 				$scope.makeBar();
 			});
 			workitems = workitems.sort(function(a, b) {
@@ -79,17 +64,20 @@ app.controller('CalendarCtrl',
 		            type: 'bar'
 		        },
 		        title: {
-		            text: 'Life Chart'
+		            text: ''
 		        },
 		        xAxis: {
-		            categories: ['']
+		            categories: ['Work data'],
+		            labels: {
+		            	enabled: false
+		            }
 		        },
 		        yAxis: {
 		            min: 0,
 		            title: {
 		                text: 'Time / hr'
 		            },
-		            max: 24
+		            max: 30
 		        },
 		        legend: {
 		            reversed: true
@@ -98,6 +86,10 @@ app.controller('CalendarCtrl',
 		            series: {
 		                stacking: 'normal'
 		            }
+		        },
+		        tooltip: {
+		        	pointFormat : '{series.name}: <b>{point.y}</b><br/>',
+		        	headerFormat : ''
 		        },
 		        series: [{
 		            name: 'Work',
@@ -116,8 +108,23 @@ app.controller('CalendarCtrl',
 		});
 	};
 
-	$scope.$watch('totalTimeObj.totaltime', function() {
-	});
+	$scope.reevaluateTimeObj = function(workEstimate, timeObj) {
+		timeObj.totaltime = workEstimate.toFixed(2);
+		var otherTime = 24 - workEstimate;
+		var leisuretime = 0;
+		var sleeptime = 7;
+
+		if (otherTime < 7) {
+			sleeptime = otherTime < 0 ? 0 : otherTime;
+			leisuretime = 0;
+		} else {
+			if (otherTime > 7) {
+				leisuretime = otherTime - 7;
+			}
+		}
+		timeObj.sleeptime = sleeptime.toFixed(2);
+		timeObj.leisuretime = leisuretime.toFixed(2);
+	};
 
 	$scope.createTask = function() {
 		var modalInstance = $modal.open({
@@ -146,6 +153,9 @@ app.controller('CalendarCtrl',
 	      	},
 	      	makeBar: function() {
 	      		return $scope.makeBar;
+	      	},
+	      	reevaluateTimeObj: function() {
+	      		return $scope.reevaluateTimeObj;
 	      	}
 	      }
 	    });
@@ -173,9 +183,26 @@ app.controller('CalendarCtrl',
 	      	},
 	      	makeBar: function() {
 	      		return $scope.makeBar;
+	      	},
+	      	reevaluateTimeObj: function() {
+	      		return $scope.reevaluateTimeObj;
 	      	}
 	      }
 	    });
+	}
+
+	$scope.removeEvent = function(id, index) {
+		$scope.tasks.splice(index, 1);
+		$('#calendar').fullCalendar('removeEvents', id);
+	}
+
+	$scope.taskDone = function(task,index) {
+		workitemService.completeTask(task.id).then(function(workEstimate) {
+			workEstimate = parseFloat(workEstimate) / 60.0;
+			$scope.reevaluateTimeObj(workEstimate, $scope.totalTimeObj);
+			$scope.removeEvent(task.id, index);
+			$scope.makeBar();
+		});
 	}
 
   });

@@ -8,9 +8,8 @@ Rails.application.routes.draw do
   resource :workitem
 
   get '/dashboard' => 'dashboard#new'
-
   get '/workestimate' => 'workitems#totalwork'
-
+  put '/deactivateTask' => 'workitems#deactivate'
   as :user do
     get "/login" => "devise/sessions#new"
     get "/signup" => "registrations#new"

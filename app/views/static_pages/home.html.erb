@@ -30,7 +30,7 @@
 
 						<div class="row task-item" ng-repeat="task in tasks">
 							<div class="col-md-2">
-								<a class="link-cursor">
+								<a ng-click="taskDone(task, $index)" class="link-cursor">
 									<i class="icon ion-checkmark"></i>
 								</a>
 							</div>

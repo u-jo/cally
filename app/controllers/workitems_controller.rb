@@ -1,5 +1,4 @@
 class WorkitemsController < ApplicationController
-before_action :correct_user, only: :destroy
 
   def new
   end  
@@ -22,22 +21,57 @@ before_action :correct_user, only: :destroy
 
 
   def deactivate
-    @workitem.update_attribute(:active, false)
+    @workitem = Workitem.where(id: params[:id]).first
+    if (!@workitem.nil?)
+      @workitem.update_attribute(:active, false)
+      total_work_time = calculate_total_time
+      respond_to do |format| 
+        format.json {
+          render :json => {
+            total_work_time: total_work_time
+          }
+        }
+      end
+    else
+      respond_to do |format| 
+        format.json {
+          render :status => 500
+        }
+      end
+    end
+    
   end 
 
 
   def update
-    @workitem.update!(workitem_params)
-    redirect_to workitem
+    @workitem = Workitem.where(id: params[:id]).first
+    if (!@workitem.nil?) 
+      @workitem.update_attributes(:minutes_needed => params[:minutes_needed], 
+                              :minutes_completed => params[:minutes_completed],
+                              :due_date => params[:due_date],
+                              :content => params[:content])
+      respond_to do |format| 
+        format.json {
+          render :json => @workitem
+        }
+      end
+    else
+      respond_to do |format| 
+        format.json {
+          render :status => 404
+        }
+      end
+    end
   end 
 
 
   def show
     if (user_signed_in?)
-      workitems = current_user.workitems.order(:due_date)
+      workitems = current_user.workitems.where(active: true)
+      workitems = workitems.sort_by { |workitem| workitem.due_date }
       respond_to do |format| 
         format.json {
-          render :json => current_user.workitems
+          render :json => workitems
         }
       end
     end
@@ -46,16 +80,8 @@ before_action :correct_user, only: :destroy
 
 #returns total amortized work in minutes
   def totalwork
-  	totaltime = 0
-  	current_user.workitems.each do |item|
-  		if item.active == true
-        puts totaltime
-  			totaltime += (item.minutes_needed-item.minutes_completed)/(item.due_date.to_date-Date.today).to_i
-  		end
-  	end
-
+  	totaltime = calculate_total_time
     respond_to do |format|
-
       format.json {
         render :json =>{ :totaltime => totaltime }
       }
@@ -74,9 +100,20 @@ before_action :correct_user, only: :destroy
       params.require(:workitem).permit(:content, :minutes_needed, :minutes_completed, :due_date, :active)
     end
 
-    def correct_user
-      @workitem = current_user.workitems.find_by(id: params[:id])
-      redirect_to root_url if @workitem.nil?
+    def calculate_total_time
+      totaltime = 0
+      current_user.workitems.each do |item|
+        if item.active == true
+          days_left = (item.due_date.to_date - Date.today).to_i
+          time_needed = item.minutes_needed - item.minutes_completed
+          if (days_left <= 0)
+            totaltime += time_needed
+          else 
+            totaltime += time_needed / days_left
+          end
+        end
+      end
+      return totaltime
     end
 
 end

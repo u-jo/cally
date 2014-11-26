@@ -2,8 +2,7 @@ class RegistrationsController < Devise::RegistrationsController
 
 	before_filter :configure_permitted_parameters
 
-  
-	# app/controllers/registrations_controller.rb
+  	#skip_before_filter :authenticate_user!
 	def new
 		super
 	end

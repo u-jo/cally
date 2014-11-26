@@ -1,6 +1,7 @@
 class StaticPagesController < ApplicationController
-  def home
-  end
+	skip_before_filter :authenticate_user!
+	def home
+	end
 
 
 

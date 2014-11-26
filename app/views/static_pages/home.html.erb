@@ -24,9 +24,13 @@
 							</div>
 						</div>
 
+						<div class="row">
+							<div id="bar-container" style="min-width: 310px; max-width: 800px; height: 200px; margin: 0 auto"></div>
+						</div>
+
 						<div class="row task-item" ng-repeat="task in tasks">
 							<div class="col-md-2">
-								<a class="link-cursor">
+								<a ng-click="taskDone(task, $index)" class="link-cursor">
 									<i class="icon ion-checkmark"></i>
 								</a>
 							</div>
@@ -41,10 +45,12 @@
 								</a>
 							
 							</div>
-
 						</div>
+						
 					</div>
 				</div>
+
+				
 				
 			</div>
 		</div>

@@ -1,4 +1,5 @@
 class WorkitemsController < ApplicationController
+  MINUTES_PER_DAY = 24 * 60
 
   def new
   end  
@@ -24,7 +25,7 @@ class WorkitemsController < ApplicationController
     @workitem = Workitem.where(id: params[:id]).first
     if (!@workitem.nil?)
       @workitem.update_attribute(:active, false)
-      total_work_time = calculate_total_time
+      total_work_time = calculate_total_time(Date.today)
       respond_to do |format| 
         format.json {
           render :json => {
@@ -39,7 +40,6 @@ class WorkitemsController < ApplicationController
         }
       end
     end
-    
   end 
 
 
@@ -64,6 +64,25 @@ class WorkitemsController < ApplicationController
     end
   end 
 
+  def weekly_status
+    today = Date.today
+    total_sleep = total_work = total_leisure = 0
+    work_array = []
+    (1..today.wday).each do |i|
+      day = today - (i - 1)
+      work_time = calculate_total_time(day)
+      work_array.push(work_time)
+    end
+
+    respond_to do |format|
+      format.json {
+        render {
+          work_data: work_array
+        }
+      }
+    end
+  end
+
 
   def show
     if (user_signed_in?)
@@ -80,7 +99,7 @@ class WorkitemsController < ApplicationController
 
 #returns total amortized work in minutes
   def totalwork
-  	totaltime = calculate_total_time
+  	totaltime = calculate_total_time(Date.today)
     respond_to do |format|
       format.json {
         render :json =>{ :totaltime => totaltime }
@@ -100,11 +119,11 @@ class WorkitemsController < ApplicationController
       params.require(:workitem).permit(:content, :minutes_needed, :minutes_completed, :due_date, :active)
     end
 
-    def calculate_total_time
+    def calculate_total_time(for_day)
       totaltime = 0
       current_user.workitems.each do |item|
         if item.active == true
-          days_left = (item.due_date.to_date - Date.today).to_i
+          days_left = (item.due_date.to_date - for_day).to_i
           time_needed = item.minutes_needed - item.minutes_completed
           if (days_left <= 0)
             totaltime += time_needed

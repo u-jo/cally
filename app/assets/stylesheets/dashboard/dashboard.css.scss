@@ -1,0 +1,43 @@
+$montserrat: "Montserrat", sans-serif;
+$lightPurple: #F3EDF9;
+$lightBeige: #FFF9E8;
+$darkGreen: #225E19;
+.dashboard-container {
+	font-family: $montserrat;
+	color: black;
+	font-size: 30px;
+	background: none;
+}
+
+.dashboard-greeting {
+	text-align:left;
+}
+
+.dashboard-date {
+	text-align: right;
+}
+
+.dashboard-header {
+	padding: 20px 0px;
+}
+
+.summary-header {
+	background: $lightPurple;
+	padding: 10px;
+	font-size: 16px;
+}
+
+.summary-body {
+	font-size: 16px;
+	padding: 10px;
+	background: $lightBeige;
+	min-height: 350px;
+}
+
+.dashboard-tip {
+	background: $darkGreen;
+}
+
+.summary {
+	text-align: left;
+}

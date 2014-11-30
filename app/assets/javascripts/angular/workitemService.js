@@ -61,5 +61,22 @@ app.factory('workitemService',
         return task;
       });
     };
+
+    workitemService.reevaluateTimeObj = function(workEstimate, timeObj) {
+      timeObj.totaltime = workEstimate.toFixed(2);
+      var otherTime = 24 - workEstimate;
+      var leisuretime = 0;
+      var sleeptime = 7;
+
+      if (otherTime < 7) {
+        sleeptime = otherTime < 0 ? 0 : otherTime;
+        leisuretime = 0;
+      } else {
+        leisuretime = otherTime - 7;
+      }
+      timeObj.sleeptime = sleeptime.toFixed(2);
+      timeObj.leisuretime = leisuretime.toFixed(2);
+    };
+
   	return workitemService;
   });

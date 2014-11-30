@@ -2,7 +2,7 @@ app.controller('CalendarCtrl',
   function ($scope, $modal, workitemService) {
 
     // page is now ready, initialize the calendar...
-
+    $scope.reevaluateTimeObj = workitemService.reevaluateTimeObj;
     $(document).ready(function() {
 		
 		$('#calendar').fullCalendar({
@@ -84,7 +84,12 @@ app.controller('CalendarCtrl',
 		        },
 		        plotOptions: {
 		            series: {
-		                stacking: 'normal'
+		                stacking: 'normal',
+		                events: {
+		                    legendItemClick: function () {
+		                        return false; // <== returning false will cancel the default action
+		                    }
+		                }
 		            }
 		        },
 		        tooltip: {
@@ -103,28 +108,15 @@ app.controller('CalendarCtrl',
 		        }],
 		        exporting: {
 				    enabled: false
-				}
+				},
+				credits: {
+		            enabled: false
+		        }
 		    });
 		});
 	};
 
-	$scope.reevaluateTimeObj = function(workEstimate, timeObj) {
-		timeObj.totaltime = workEstimate.toFixed(2);
-		var otherTime = 24 - workEstimate;
-		var leisuretime = 0;
-		var sleeptime = 7;
-
-		if (otherTime < 7) {
-			sleeptime = otherTime < 0 ? 0 : otherTime;
-			leisuretime = 0;
-		} else {
-			if (otherTime > 7) {
-				leisuretime = otherTime - 7;
-			}
-		}
-		timeObj.sleeptime = sleeptime.toFixed(2);
-		timeObj.leisuretime = leisuretime.toFixed(2);
-	};
+	
 
 	$scope.createTask = function() {
 		var modalInstance = $modal.open({

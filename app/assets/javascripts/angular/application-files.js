@@ -7,3 +7,4 @@
 //= require ./calendarController.js
 //= require ./workitemService.js
 //= require ./taskCtrl.js
+//= require ./dashboardCtrl.js

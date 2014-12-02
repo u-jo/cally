@@ -1,5 +1,10 @@
 app.controller('TaskModalCtrl',
-  function ($scope, $modalInstance, $filter, tasks, task, edit, totalTimeObj, workitemService, makeBar, reevaluateTimeObj) {
+  function ($scope, $modalInstance, $filter, tasks, task, edit, totalTimeObj, workitemService, eventService, makeBar, reevaluateTimeObj, displayEvents, events) {
+  	$scope.itemType = 'task';
+  	$scope.setItemType = function(type) {
+  		$scope.opened = false;
+  		$scope.itemType = type;
+  	};
   	$scope.closeModal= function() {
 		$modalInstance.dismiss('cancel');
   	};
@@ -69,5 +74,32 @@ app.controller('TaskModalCtrl',
   	};
   	$scope.remainingTime = '';
   	
+	//===== Event Creation =====//
+
+	$scope.eventModel = {};
+
+	$scope.createEvent = function() {
+		var startTime = calculateMinutes($scope.eventModel.startTime);
+		var endTime = calculateMinutes($scope.eventModel.endTime);
+		var newEvent = {
+			start_time : startTime,
+			end_time : endTime,
+			name : $scope.eventModel.name,
+			date: $scope.eventModel.date
+		};
+		eventService.createEvent(newEvent).then(function(createdEvent) {
+			var displayEventModel = eventService.toEventObj(createdEvent);
+			displayEvents.push(displayEventModel);
+			displayEvents.sort(function(a,b) {
+				return a.date <= b.date ? -1 : 1;
+			});
+			$modalInstance.dismiss('cancel');
+		});
+		
+	};
+
+	function calculateMinutes(date) {
+		return date.getMinutes() + date.getHours() * 60;
+	}
 
   });

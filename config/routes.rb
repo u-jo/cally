@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => {:registrations => "registrations"}
   root to: 'static_pages#home'
   resource :workitem
-
+  resource :event
   get '/dashboard' => 'dashboard#new'
   get '/workestimate' => 'workitems#totalwork'
   put '/deactivateTask' => 'workitems#deactivate'

@@ -1,5 +1,5 @@
 app.controller('CalendarCtrl',
-  function ($scope, $modal, workitemService) {
+  function ($scope, $modal, workitemService, eventService) {
 
     // page is now ready, initialize the calendar...
     $scope.reevaluateTimeObj = workitemService.reevaluateTimeObj;
@@ -44,8 +44,24 @@ app.controller('CalendarCtrl',
 			});
 
 		});
+
+		eventService.getEvents().then(function(events) {
+			$scope.events = transformEvents(events);
+			$scope.displayEvents = angular.copy($scope.events).filter(function(eventObj) {
+				return eventObj.endTime >= (new Date());
+			}).sort(function(a,b) {
+				return a.date <= b.date ? -1 : 1;
+			});	
+
+		});
 		
 	});
+
+	function transformEvents(events) {
+		return events.map(function(eventObj) {
+			return eventService.toEventObj(eventObj);
+		});
+	}
 
 	
 
@@ -148,6 +164,15 @@ app.controller('CalendarCtrl',
 	      	},
 	      	reevaluateTimeObj: function() {
 	      		return $scope.reevaluateTimeObj;
+	      	},
+	      	eventService: function() {
+	      		return eventService;
+	      	},
+	      	events: function() {
+	      		return $scope.events;
+	      	},
+	      	displayEvents: function() {
+	      		return $scope.displayEvents;
 	      	}
 	      }
 	    });
@@ -178,6 +203,15 @@ app.controller('CalendarCtrl',
 	      	},
 	      	reevaluateTimeObj: function() {
 	      		return $scope.reevaluateTimeObj;
+	      	},
+	      	eventService: function() {
+	      		return eventService;
+	      	},
+	      	events: function() {
+	      		return $scope.events;
+	      	},
+	      	displayEvents: function() {
+	      		return $scope.displayEvents;
 	      	}
 	      }
 	    });
@@ -196,5 +230,27 @@ app.controller('CalendarCtrl',
 			$scope.makeBar();
 		});
 	}
+
+	$scope.editEvent = function(eventObj) {
+		var modalInstance = $modal.open({
+	      templateUrl: 'eventModal.html',
+	      controller: 'EventModalCtrl',
+	      size: 'md',
+	      resolve: {
+	      	eventService: function() {
+	      		return eventService;
+	      	},
+	      	eventObj: function() {
+	      		return eventObj;
+	      	}
+	      }
+	    });
+	}
+
+	$scope.deleteEvent = function(eventObj, index) {
+		eventService.deleteEvent(eventObj.id).then(function() {
+			$scope.displayEvents.splice(index, 1);
+		});
+	};
 
   });

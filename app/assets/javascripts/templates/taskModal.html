@@ -12,7 +12,19 @@
 	</div>
 
 	<div class="modal-body">
-		<form class="form-horizontal" role="form">
+		<form ng-if="!edit" class="form-horizontal" role="form">
+			<div class="form-group">
+				<label for="itemType" class="col-sm-3 control-label">I am creating a</label>
+			    <div class="col-sm-8">
+				    <div class="btn-group" role="group" aria-label="...">
+					  <button ng-class="{active : itemType === 'task'}" ng-click="setItemType('task')" type="button" class="btn btn-default">Task</button>
+					  <button ng-class="{active : itemType === 'event'}" ng-click="setItemType('event')" type="button" class="btn btn-default">Event</button>
+					</div>
+			    </div>
+			</div>
+		</form>
+		
+		<form ng-if="itemType === 'task'" class="form-horizontal" role="form">
 			<div class="form-group">
 				<label for="taskName" class="col-sm-3 control-label">Task Name</label>
 			    <div class="col-sm-8">
@@ -62,12 +74,47 @@
 			</div>
 		</form>
 
-		<div>
-            
-        </div>
+		<form ng-if="itemType === 'event'" class="form-horizontal" role="form">
+			<div class="form-group">
+				<label for="eventName" class="col-sm-3 control-label">Event Name</label>
+			    <div class="col-sm-8">
+					<input ng-model="eventModel.name" id="eventName" type="text" class="form-control"/>
+			    </div>
+			</div>
+
+			<div class="form-group">
+				<label for="dueDate" class="col-sm-3 control-label">Event Date</label>
+			    <div class="col-sm-8">
+		            <p class="input-group">
+		              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="eventModel.date" is-open="opened" min-date="minDate" datepicker-popup="dateOptions" ng-required="true" close-text="Close" show-button-bar="false"/>
+		              <span class="input-group-btn">
+		                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+		              </span>
+		            </p>
+			    </div>
+			</div>
+
+			<div class="form-group">
+				<label for="startTime" class="col-sm-3 control-label">Start Time</label>
+			    <div class="col-sm-8">
+					<input type="time" ng-model="eventModel.startTime" id="startTime" type="text" class="form-control"/>
+			    </div>
+			</div>
+			<div class="form-group">
+				<label for="startTime" class="col-sm-3 control-label">End Time</label>
+			    <div class="col-sm-8">
+					<input type="time" ng-model="eventModel.endTime" id="startTime" type="text" class="form-control"/>
+			    </div>
+			</div>
+
+
+			
+		</form>
+
 
         <div class="form-group">
-		    <button ng-click="createTask()" class="btn btn-primary rounded-button center-block">{{taskPrompt}}</button>
+		    <button ng-click="createTask()" ng-if="itemType === 'task'" class="btn btn-primary rounded-button center-block">{{taskPrompt}}</button>
+		     <button ng-click="createEvent()" ng-if="itemType === 'event'" class="btn btn-primary rounded-button center-block">Create Event</button>
 		</div>
 	</div>
 </div>

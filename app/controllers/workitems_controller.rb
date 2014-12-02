@@ -76,7 +76,7 @@ class WorkitemsController < ApplicationController
 
     respond_to do |format|
       format.json {
-        render {
+        render :json => {
           work_data: work_array
         }
       }
@@ -114,7 +114,6 @@ class WorkitemsController < ApplicationController
 # else: sleep = 8, leisure = 16-totalworkhours
 
  private
-
     def workitem_params
       params.require(:workitem).permit(:content, :minutes_needed, :minutes_completed, :due_date, :active)
     end

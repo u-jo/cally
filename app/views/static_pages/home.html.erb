@@ -28,25 +28,48 @@
 							<div id="bar-container" style="min-width: 310px; max-width: 800px; height: 200px; margin: 0 auto"></div>
 						</div>
 
-						<div class="row task-item" ng-repeat="task in tasks">
-							<div class="col-md-2">
-								<a ng-click="taskDone(task, $index)" class="link-cursor">
-									<i class="icon ion-checkmark"></i>
-								</a>
-							</div>
-							<div class="col-md-8">
-								{{task.name}} - {{ task.date | date : 'dd MMMM yyyy'}}
-							</div>
+						<tabset justified="true">
+						    <tab heading="Tasks">
+						    	<div class="row row-item" ng-repeat="task in tasks">
+									<div class="col-md-2">
+										<a ng-click="taskDone(task, $index)" class="link-cursor">
+											<i class="icon ion-checkmark"></i>
+										</a>
+									</div>
+									<div class="col-md-8">
+										{{task.name}} - {{ task.date | date : 'dd MMMM yyyy'}}
+								</div>
 
-							<div class="col-md-2">
-								<!-- Standard button -->
-								<a ng-click="inspectTask(task)" class="link-cursor">
-									<i class="icon ion-eye"></i>
-								</a>
-							
-							</div>
-						</div>
-						
+									<div class="col-md-2">
+										<!-- Standard button -->
+										<a ng-click="inspectTask(task)" class="link-cursor">
+											<i class="icon ion-eye"></i>
+										</a>
+									
+									</div>
+								</div>
+						    </tab>
+						    <tab heading="Upcoming Events">
+						    	<div class="row row-item" ng-repeat="event in displayEvents">
+						    		<div class="col-md-2">
+										<a ng-click="deleteEvent(event, $index)" class="link-cursor">
+											<i class="icon ion-trash-b"></i>
+										</a>
+									</div>
+									<div class="col-md-8">
+										{{event.name}} - {{ event.date | date : 'dd MMMM yyyy'}}
+									</div>
+
+									<div class="col-md-2">
+										<!-- Standard button -->
+										<a ng-click="editEvent(event)" class="link-cursor">
+											<i class="icon ion-eye"></i>
+										</a>
+									
+									</div>
+								</div>
+						    </tab>
+						</tabset>
 					</div>
 				</div>
 

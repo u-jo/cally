@@ -30,6 +30,7 @@ gem 'jquery-turbolinks'
 
 gem 'devise'
 gem 'ionicons-rails'
+gem "select2-rails"
 
 group :development do
   gem 'guard-livereload', require: false

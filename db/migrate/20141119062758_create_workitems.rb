@@ -10,7 +10,7 @@ class CreateWorkitems < ActiveRecord::Migration
 
       t.timestamps
     end
+    
     add_index :workitems, :user_id, :created_at
-
   end
 end

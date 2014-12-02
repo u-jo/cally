@@ -50,6 +50,8 @@ class WorkitemsController < ApplicationController
                               :minutes_completed => params[:minutes_completed],
                               :due_date => params[:due_date],
                               :content => params[:content])
+      @work_log = @workitem.work_logs.build(work_log_params)
+      @work_log.save
       respond_to do |format| 
         format.json {
           render :json => @workitem
@@ -96,6 +98,15 @@ class WorkitemsController < ApplicationController
     end
   end
 
+  def events_today 
+    events_today = current_user.events.where(date: Time.now.to_date)
+    respond_to do |format| 
+      format.json {
+        render :json => events_today
+      }
+    end
+  end
+
 
 #returns total amortized work in minutes
   def totalwork
@@ -116,6 +127,10 @@ class WorkitemsController < ApplicationController
  private
     def workitem_params
       params.require(:workitem).permit(:content, :minutes_needed, :minutes_completed, :due_date, :active)
+    end
+
+    def work_log_params
+      params.require(:work_log).permit(:change_in_time)
     end
 
     def calculate_total_time(for_day)

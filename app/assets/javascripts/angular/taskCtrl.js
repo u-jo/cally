@@ -38,20 +38,23 @@ app.controller('TaskModalCtrl',
 			workitemService.createWorkitem($scope.task).then(function(taskResource) {
 			tasks.push($scope.task);
 	  			$scope.task.id = taskResource.id;
-		  		var task = { id: taskResource.id, title: $scope.task.name, start: $scope.task.date, end: $scope.task.date};
+		  		var task = { id: taskResource.id, title: $scope.task.name, start: $scope.task.date, end: $scope.task.date, color: '#0266C8'};
 				$('#calendar').fullCalendar('renderEvent', task, true);
 				tasks = tasks.sort(function(a, b) {
 		  			return a.date - b.date;
 		  		});
 		  		$modalInstance.dismiss('cancel');
 		  		workitemService.getWorkEstimate().then(function(workEstimate) {
-		  			reevaluateTimeObj(workEstimate, totalTimeObj);
-		  			makeBar();
+		  			reevaluateTimeObj(workEstimate, totalTimeObj).then(function() {
+		  				makeBar();
+		  			});
 		  		});
 			});
   		} else {
   			$scope.tempTask.name = $scope.task.name;
-			workitemService.updateTask($scope.tempTask).then(function(updatedTask) {
+
+  			var changeInTime = parseFloat($scope.tempTask.completedTime) - $scope.task.completedTime;
+			workitemService.updateTask($scope.tempTask, changeInTime).then(function(updatedTask) {
 				$scope.task.time = updatedTask.time;
 				$scope.task.completedTime = updatedTask.completedTime;
 				$scope.task.id = updatedTask.id;
@@ -59,13 +62,15 @@ app.controller('TaskModalCtrl',
 				var selectedTask = $('#calendar').fullCalendar( 'clientEvents', updatedTask.id)[0];
 	  			selectedTask.start = updatedTask.date;
 	  			selectedTask.end = updatedTask.date;
+	  			selectedTask.title = updatedTask.name;
 	  			$('#calendar').fullCalendar( 'updateEvent', selectedTask);
 	  			tasks = tasks.sort(function(a, b) {
 		  			return a.date - b.date;
 		  		});
 		  		workitemService.getWorkEstimate().then(function(workEstimate) {
-		  			reevaluateTimeObj(workEstimate, totalTimeObj);
-		  			makeBar();
+		  			reevaluateTimeObj(workEstimate, totalTimeObj).then(function() {
+		  				makeBar();
+		  			});
 		  			$modalInstance.dismiss('cancel');
 		  		});
 			});
@@ -88,7 +93,16 @@ app.controller('TaskModalCtrl',
 			date: $scope.eventModel.date
 		};
 		eventService.createEvent(newEvent).then(function(createdEvent) {
+
 			var displayEventModel = eventService.toEventObj(createdEvent);
+			var ev = {
+				id: displayEventModel.eventID,
+				start: displayEventModel.date,
+				end: displayEventModel.date,
+				title: displayEventModel.name,
+				color: '#00933B'
+			};
+			$('#calendar').fullCalendar('renderEvent', ev, true);
 			displayEvents.push(displayEventModel);
 			displayEvents.sort(function(a,b) {
 				return a.date <= b.date ? -1 : 1;

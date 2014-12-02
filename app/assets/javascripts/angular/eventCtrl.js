@@ -1,5 +1,5 @@
 app.controller('EventModalCtrl',
-  function ($scope, $modalInstance, $filter, eventService, eventObj) {
+  function ($scope, $modalInstance, $filter, eventService, eventObj, displayEvents) {
   	$scope.closeModal= function() {
 		  $modalInstance.dismiss('cancel');
   	};
@@ -16,9 +16,27 @@ app.controller('EventModalCtrl',
         date: $scope.tempEventObj.date,
         id : $scope.tempEventObj.id
       };
-  		eventService.updateEvent(updatedEvent).then(function(eventObj) {
+  		eventService.updateEvent(updatedEvent).then(function() {
+        eventObj.startTime.setHours($scope.tempEventObj.startTime.getHours());
+        eventObj.startTime.setMinutes($scope.tempEventObj.startTime.getMinutes());
+        eventObj.endTime.setHours($scope.tempEventObj.endTime.getHours());
+        eventObj.endTime.setMinutes($scope.tempEventObj.endTime.getMinutes());
+        eventObj.name = $scope.tempEventObj.name;
+        eventObj.date = $scope.tempEventObj.date;
+        var selectedEvent = $('#calendar').fullCalendar( 'clientEvents', eventObj.eventID)[0];
+        selectedEvent.start = eventObj.date;
+        selectedEvent.end = eventObj.date;
+        selectedEvent.title = eventObj.name;
+        $('#calendar').fullCalendar( 'updateEvent', selectedEvent);
+        displayEvents.sort(function(a,b) {
+          return a.date <= b.date ? -1 : 1;
+        });
   			$modalInstance.dismiss('cancel');
   		});
+
+
+
+
   	};
 
     $scope.formats = ['dd MMMM yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];

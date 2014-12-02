@@ -48,6 +48,7 @@ app.factory('eventService',
       endTime.setHours(endHour);
       return {
         id: eventObj.id,
+        eventID: ('event' + eventObj.id),
         name: eventObj.name,
         date : eventObj.date,
         startTime : startTime,

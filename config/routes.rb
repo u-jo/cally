@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get '/dashboard' => 'dashboard#new'
   get '/workestimate' => 'workitems#totalwork'
   put '/deactivateTask' => 'workitems#deactivate'
+  get '/eventsToday' => 'workitems#events_today'
+  get '/weeklySummary' => 'dashboard#weekly_summary'
   as :user do
     get "/login" => "devise/sessions#new"
     get "/signup" => "registrations#new"

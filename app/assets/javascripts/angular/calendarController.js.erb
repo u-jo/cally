@@ -15,15 +15,18 @@ app.controller('CalendarCtrl',
 				today: 'Today'
 			},
 			defaultDate: new Date(),
-			editable: true,
+			events: {
+				editable: false
+			},
 			eventLimit: true,
 			timeFormat: ''
 		});
 
 		workitemService.getWorkItems().then(function(workitems) {
 			workitemService.getWorkEstimate().then(function(workEstimate) {
-				$scope.reevaluateTimeObj(workEstimate, $scope.totalTimeObj);
-				$scope.makeBar();
+				$scope.reevaluateTimeObj(workEstimate, $scope.totalTimeObj).then(function() {
+					$scope.makeBar();
+				});
 			});
 			workitems = workitems.sort(function(a, b) {
 				return new Date(a.due_date) - new Date(b.due_date);
@@ -37,7 +40,7 @@ app.controller('CalendarCtrl',
 					date: new Date(workitem.due_date),
 					id: workitem.id
 				};
-				var calTask = { id: task.id, title: task.name, start: task.date, end: task.date};
+				var calTask = { id: task.id, title: task.name, start: task.date, end: task.date, color: '#0266C8'};
 				$('#calendar').fullCalendar('renderEvent', calTask, true);
 
 				$scope.tasks.push(task);
@@ -52,6 +55,17 @@ app.controller('CalendarCtrl',
 			}).sort(function(a,b) {
 				return a.date <= b.date ? -1 : 1;
 			});	
+
+			$scope.events.forEach(function(eventObj) {
+				var ev = {
+					id: eventObj.eventID,
+					start: eventObj.date,
+					end: eventObj.date,
+					title: eventObj.name,
+					color: '#00933B'
+				};
+				$('#calendar').fullCalendar('renderEvent', ev, true);
+			});
 
 		});
 		
@@ -93,7 +107,7 @@ app.controller('CalendarCtrl',
 		            title: {
 		                text: 'Time / hr'
 		            },
-		            max: 30
+		            max: 25
 		        },
 		        legend: {
 		            reversed: true
@@ -121,6 +135,9 @@ app.controller('CalendarCtrl',
 		        }, {
 		            name: 'Sleep',
 		            data: [parseFloat($scope.totalTimeObj.sleeptime)]
+		        }, {
+		        	name: 'Events',
+		        	data: [parseFloat($scope.totalTimeObj.eventTime)]
 		        }],
 		        exporting: {
 				    enabled: false
@@ -225,9 +242,11 @@ app.controller('CalendarCtrl',
 	$scope.taskDone = function(task,index) {
 		workitemService.completeTask(task.id).then(function(workEstimate) {
 			workEstimate = parseFloat(workEstimate) / 60.0;
-			$scope.reevaluateTimeObj(workEstimate, $scope.totalTimeObj);
+			$scope.reevaluateTimeObj(workEstimate, $scope.totalTimeObj).then(function() {
+				$scope.makeBar();
+			});
 			$scope.removeEvent(task.id, index);
-			$scope.makeBar();
+			
 		});
 	}
 
@@ -242,6 +261,9 @@ app.controller('CalendarCtrl',
 	      	},
 	      	eventObj: function() {
 	      		return eventObj;
+	      	},
+	      	displayEvents: function() {
+	      		return $scope.displayEvents;
 	      	}
 	      }
 	    });
@@ -250,6 +272,7 @@ app.controller('CalendarCtrl',
 	$scope.deleteEvent = function(eventObj, index) {
 		eventService.deleteEvent(eventObj.id).then(function() {
 			$scope.displayEvents.splice(index, 1);
+			$('#calendar').fullCalendar('removeEvents', eventObj.eventID);
 		});
 	};
 

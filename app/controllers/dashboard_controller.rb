@@ -14,6 +14,8 @@ class DashboardController < ApplicationController
 			end
 		end
 		@total_work = (total_work / 60.0).round(2)
+		@recommended_time = (calculate_total_time(Date.today) / 60.0).round(2)
+		@enough_work = @total_work >= @recommended_time
 	end
 
 	def weekly_summary

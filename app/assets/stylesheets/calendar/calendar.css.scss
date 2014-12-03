@@ -38,3 +38,16 @@ a.link-cursor:hover {
 	font-size: 14px;
 	padding: 10px;
 }
+
+.tab-content {
+	height: 300px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+.success-color {
+	background: #00933B !important;
+}
+
+.failure-color {
+	background:  #F2B50F !important;
+}

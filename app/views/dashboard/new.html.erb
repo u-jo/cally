@@ -12,8 +12,12 @@
 	</div>
 	<div class="summary row">
 		<div class="col-md-4">
+
+			<div class="<%= @enough_work ? 'success-color' : 'failure-color' %> row summary-header ">
+				You completed <%= @total_work %> hours of work today.
+			</div>
 			<div class="row summary-header">
-				You completed <%= @total_work %> hours of work today
+				We recommend that you complete <%= @recommended_time %> hours of work today.
 			</div>
 			<div class="row summary-body">
 				<div>

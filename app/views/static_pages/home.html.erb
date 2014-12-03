@@ -2,6 +2,7 @@
 <div>
 	<% if !user_signed_in? %>
 		<!-- to render home page -->
+		<%= render 'static_pages/splash' %>
 	<% else %>
 		<div ng-controller="CalendarCtrl">
 			<div class="container calendar-container">

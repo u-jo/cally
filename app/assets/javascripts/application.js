@@ -14,6 +14,7 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require select2
+//= require flexslider
 //= require ./angular/application-files
 //= require angular-rails-templates
 //= require_tree ./templates

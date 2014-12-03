@@ -5,6 +5,7 @@
 //= require ./highcharts.js
 //= require ./exporting.js
 //= require ./app.js
+//= require ./slider.directive.js
 //= require ./calendarController.js
 //= require ./workitemService.js
 //= require ./eventService.js

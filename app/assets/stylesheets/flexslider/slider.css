@@ -1,0 +1,51 @@
+/*flex slider*/
+.slider-reg{
+    width:100%;
+
+}
+.main-flex-slider{
+    position: relative;
+}
+.main-flex-slider .flex-control-nav {
+    bottom: 30px;
+    margin: 0;
+    height: 14px;
+    z-index: 10;
+}
+.main-flex-slider .flex-control-paging li a{
+    background-color: #fff !important;
+}
+.main-flex-slider .flex-control-paging li a.flex-active{
+    background-color: #0FAF97 !important;
+}
+.slider-overlay{
+    background: rgba(0,0,0,.4);
+    background-image: url('../../assets/img/pattern.png');
+    background-repeat: repeat;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.slider-text{
+   text-align: center;
+}
+
+
+.slider-text h1{
+    color:#fff;
+    margin-top: 150px;
+    font-size: 38px;
+    font-weight: 800;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.slider-text p{
+    color:#fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+}

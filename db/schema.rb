@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141202034742) do
+ActiveRecord::Schema.define(version: 20141203060735) do
 
   create_table "events", force: true do |t|
     t.string   "name"
@@ -43,6 +43,15 @@ ActiveRecord::Schema.define(version: 20141202034742) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+
+  create_table "work_constants", force: true do |t|
+    t.integer  "work_time"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "work_constants", ["user_id"], name: "index_work_constants_on_user_id"
 
   create_table "work_logs", force: true do |t|
     t.integer  "change_in_time"

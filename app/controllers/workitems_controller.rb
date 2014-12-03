@@ -46,6 +46,13 @@ class WorkitemsController < ApplicationController
   def update
     @workitem = Workitem.where(id: params[:id]).first
     if (!@workitem.nil?) 
+      time_needed_before = @workitem.minutes_needed
+      time_needed_now = params[:minutes_completed]
+
+      if (time_needed_before != time_needed_now)
+        time_diff = time_needed_now - time_needed_before
+
+      end
       @workitem.update_attributes(:minutes_needed => params[:minutes_needed], 
                               :minutes_completed => params[:minutes_completed],
                               :due_date => params[:due_date],
@@ -138,7 +145,8 @@ class WorkitemsController < ApplicationController
       current_user.workitems.each do |item|
         if item.active == true
           days_left = (item.due_date.to_date - for_day).to_i
-          time_needed = item.minutes_needed - item.minutes_completed
+          time_needed = item.minutes_needed - past_work_completed(item)
+          puts "YESSS"
           if (days_left <= 0)
             totaltime += time_needed
           else 
@@ -147,6 +155,12 @@ class WorkitemsController < ApplicationController
         end
       end
       return totaltime
+    end
+
+    def past_work_completed(work_item)
+      past_work = work_item.work_logs.where("DATE(created_at) < ?", Date.today)
+      past_time = past_work.inject(0) { |sum, work_log| sum + work_log.change_in_time }
+      return past_time
     end
 
 end

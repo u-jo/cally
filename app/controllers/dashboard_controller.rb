@@ -1,6 +1,6 @@
 class DashboardController < ApplicationController
 	def new
-		worklogs = WorkLog.where("DATE(created_at) = ?", Date.today)
+		worklogs = current_user.work_logs.where("DATE(work_logs.created_at) = ?", Date.today)
 		total_work = 0
 		workitems_set = Set.new
 		@tasks_worked = []
@@ -22,7 +22,7 @@ class DashboardController < ApplicationController
 		work_time_array = []
 		event_time_array = []
 		(range.first).downto(range.last).each do |day|
-			worklogs = WorkLog.where("DATE(created_at) = ?", Date.today - (day - 1))
+			worklogs = current_user.work_logs.where("DATE(work_logs.created_at) = ?", Date.today - (day - 1))
 			work_time = 0
 			
 			worklogs.each do |work|
@@ -38,7 +38,7 @@ class DashboardController < ApplicationController
 
 		(0..6).each do |offset|
 			day = Date.today.beginning_of_week + offset
-			events = Event.where("date = ?", day)
+			events = Event.where("date = ? and user_id = ?", day, current_user.id)
 			event_time = 0
 			events.each do |event|
 				event_time += event.end_time - event.start_time

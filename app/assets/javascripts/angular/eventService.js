@@ -1,4 +1,4 @@
-app.factory('eventService',
+app.factory('eventService',['$resource',
   function ($resource) {
   	var eventService = {};
     var eventResource = $resource('/event.json', {}, {
@@ -56,4 +56,4 @@ app.factory('eventService',
       }
     };
   	return eventService;
-  });
+  }]);

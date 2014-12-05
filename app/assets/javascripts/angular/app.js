@@ -3,10 +3,10 @@ var app = angular
     'ui.bootstrap',
     'templates',
     'ngResource'
-  ]).config(function (datepickerConfig, datepickerPopupConfig) {
+  ]).config(['datepickerConfig', 'datepickerPopupConfig', function (datepickerConfig, datepickerPopupConfig) {
       datepickerConfig.showWeeks = false;
       datepickerPopupConfig.showButtonBar = false;
-    });
+    }]);
 
 
 $(document).on('ready page:load', function() {

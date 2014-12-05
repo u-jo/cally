@@ -1,4 +1,4 @@
-app.controller('EventModalCtrl',
+app.controller('EventModalCtrl', ['$scope', '$modalInstance', '$filter', 'eventService', 'eventObj', 'displayEvents',
   function ($scope, $modalInstance, $filter, eventService, eventObj, displayEvents) {
   	$scope.closeModal= function() {
 		  $modalInstance.dismiss('cancel');
@@ -56,4 +56,4 @@ app.controller('EventModalCtrl',
     }
 
   	
-  });
+  }]);

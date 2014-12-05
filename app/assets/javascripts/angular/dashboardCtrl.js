@@ -1,4 +1,4 @@
-app.controller('DashboardCtrl',
+app.controller('DashboardCtrl',['$scope', 'workitemService',
   function ($scope, workitemService) {
 	$scope.date = new Date(); 
 	$scope.workHours = [];
@@ -77,4 +77,4 @@ app.controller('DashboardCtrl',
 		        },
 		    });
 	};
-  });
+  }]);

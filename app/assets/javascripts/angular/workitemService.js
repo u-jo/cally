@@ -1,4 +1,4 @@
-app.factory('workitemService',
+app.factory('workitemService', [ "$resource",
   function ($resource) {
   	var workitemService = {};
 
@@ -110,4 +110,4 @@ app.factory('workitemService',
     }
 
   	return workitemService;
-  });
+  }]);

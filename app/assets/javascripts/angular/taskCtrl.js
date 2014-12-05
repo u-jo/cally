@@ -1,4 +1,4 @@
-app.controller('TaskModalCtrl',
+app.controller('TaskModalCtrl', [ "$scope", "$modalInstance", "$filter", "tasks", "task", "edit", "totalTimeObj", "workitemService", "eventService", "makeBar", "reevaluateTimeObj", "displayEvents", "events",
   function ($scope, $modalInstance, $filter, tasks, task, edit, totalTimeObj, workitemService, eventService, makeBar, reevaluateTimeObj, displayEvents, events) {
   	$scope.itemType = 'task';
   	$scope.setItemType = function(type) {
@@ -116,4 +116,4 @@ app.controller('TaskModalCtrl',
 		return date.getMinutes() + date.getHours() * 60;
 	}
 
-  });
+  }]);
